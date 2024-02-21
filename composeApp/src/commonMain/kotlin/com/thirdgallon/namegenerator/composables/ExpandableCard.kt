@@ -1,3 +1,5 @@
+package com.thirdgallon.namegenerator.composables
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

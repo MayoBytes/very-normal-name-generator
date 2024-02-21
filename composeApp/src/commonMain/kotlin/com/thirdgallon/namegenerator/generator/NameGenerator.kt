@@ -1,3 +1,5 @@
+package com.thirdgallon.namegenerator.generator
+
 class NameGenerator {
 
     fun generate(options: Options): String {

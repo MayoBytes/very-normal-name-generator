@@ -1,3 +1,6 @@
+package com.thirdgallon.namegenerator.composables
+
+import com.thirdgallon.namegenerator.models.OptionsModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +16,6 @@ import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.thirdgallon.namegenerator.generator.Gender
+
 
 @Composable
-fun BasicOptionsPanel(options: MutableState<Options>) {
+fun BasicOptionsPanel(options: OptionsModel) {
 
     var showGenderPicker by remember { mutableStateOf(false) }
 
@@ -44,8 +48,8 @@ fun BasicOptionsPanel(options: MutableState<Options>) {
                 Text("First Name")
                 Spacer(Modifier.padding(horizontal = 6.dp))
                 Switch(
-                    checked = options.value.first,
-                    onCheckedChange = { options.value = options.value.toggleFirst() },
+                    checked = options.first.value,
+                    onCheckedChange = { options.toggleFirst() },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colors.secondary,
                         checkedTrackColor = MaterialTheme.colors.secondaryVariant,
@@ -61,8 +65,8 @@ fun BasicOptionsPanel(options: MutableState<Options>) {
                 Text("Last Name")
                 Spacer(Modifier.padding(horizontal = 6.dp))
                 Switch(
-                    checked = options.value.last,
-                    onCheckedChange = { options.value = options.value.toggleLast() },
+                    checked = options.last.value,
+                    onCheckedChange = { options.toggleLast() },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colors.secondary,
                         checkedTrackColor = MaterialTheme.colors.secondaryVariant,
@@ -88,17 +92,17 @@ fun BasicOptionsPanel(options: MutableState<Options>) {
                 shape = RoundedCornerShape(32.dp),
                 onClick = { showGenderPicker = !showGenderPicker }
             ) {
-                Text(stringForGender(options.value.gender))
+                Text(stringForGender(options.gender.value))
                 DropdownMenu(
                     expanded = showGenderPicker,
                     onDismissRequest = { showGenderPicker = false },
                 ) {
-                    Gender.entries.forEach { genderByte ->
+                    Gender.entries.forEach { gender ->
                         DropdownMenuItem(onClick = {
-                            options.value = options.value.setGender(genderByte)
+                            options.setGender(gender)
                             showGenderPicker = false
                         }) {
-                            Text(stringForGender(genderByte))
+                            Text(stringForGender(gender))
                         }
                     }
                 }

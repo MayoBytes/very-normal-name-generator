@@ -33,6 +33,7 @@ kotlin {
         val desktopMain by getting
         
         androidMain.dependencies {
+            implementation(libs.compose.ui.tooling)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
         }
@@ -43,6 +44,8 @@ kotlin {
             implementation(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            implementation("cafe.adriel.voyager:voyager-screenmodel:1.0.0")
+            implementation("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
