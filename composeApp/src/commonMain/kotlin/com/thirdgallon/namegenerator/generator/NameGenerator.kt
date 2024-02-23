@@ -1,7 +1,11 @@
 package com.thirdgallon.namegenerator.generator
 
+import kotlinx.datetime.Clock
+import kotlin.random.Random
+
 class NameGenerator {
 
+    private var random = Random(Clock.System.now().epochSeconds)
     private var lastGenerated = ""
 
     fun generate(options: Options): String {
@@ -10,86 +14,54 @@ class NameGenerator {
 
         if (options.first) {
             generated += when(options.gender) {
-                Gender.MASC -> MASC_FIRST_NAMES.random()
-                Gender.FEM -> FEM_FIRST_NAMES.random()
-                Gender.NEUT -> NEUT_FIRST_NAMES.random()
+                Gender.MASC -> generateMasculine()
+                Gender.FEM -> Names.Feminine.COMPLETE.random()
+                Gender.NEUT -> Names.Neutral.COMPLETE.random()
             }
         }
 
         if (options.last) {
             if (generated.isNotEmpty()) generated += " "
-            generated += LAST_NAMES.random()
+            generated += generateSurname()
         }
 
         lastGenerated = generated
         return generated
     }
 
+    fun generateMasculine(): String {
+        if (random.nextDouble(0.0, 1.0) <= COMPLETE_CHANCE) {
+            return Names.Masculine.COMPLETE.random()
+        }
+        else {
+            return Names.Masculine.ROOT.random() + Names.Masculine.SUFFIX.random()
+        }
+    }
+
+    fun generateSurname():String {
+        if (roll(COMPLETE_CHANCE)) {
+            return Names.Surname.COMPLETE.random()
+        }
+        else {
+            val base = Names.Surname.ROOT.random() + Names.Surname.SUFFIX.random()
+            if (roll(SURNAME_PREFIX_CHANCE)) {
+                return Names.Surname.PREFIX.random() + base
+            }
+            else return base
+        }
+    }
+
     fun getLastGenerated(): String {
         return lastGenerated
     }
 
+    private fun roll(chance: Double): Boolean {
+        return random.nextDouble(0.0, 1.0) <= chance
+    }
+
     companion object {
         val shared = NameGenerator()
-        private val MASC_FIRST_NAMES = arrayOf(
-            "Bill",
-            "Tim",
-            "Fred",
-            "John",
-            "Steven",
-            "Rob",
-            "Bob",
-            "Jim",
-            "Terry",
-            "William",
-            "Frank",
-            "David",
-        )
-
-        private val FEM_FIRST_NAMES = arrayOf(
-            "Delphine",
-            "Jan",
-            "Sarah",
-            "Barbara",
-            "Olivia",
-            "Charlotte",
-            "Mary",
-            "Emily",
-            "Mia",
-            "Elizabeth",
-            "Anna",
-            "Irene",
-        )
-
-        private val NEUT_FIRST_NAMES = arrayOf(
-            "Avery",
-            "Kit",
-            "Alex",
-            "Finley",
-            "Zephyr",
-            "Kai",
-            "Remi",
-            "Frankie",
-            "Ash",
-            "Charlie",
-            "Lux",
-            "Koda",
-        )
-
-        private val LAST_NAMES = arrayOf(
-            "Smith",
-            "Johnson",
-            "Sewerperson",
-            "Jones",
-            "Farmer",
-            "Tomlinson",
-            "Williams",
-            "Brown",
-            "Garcia",
-            "Miller",
-            "Davis",
-            "Anderson",
-            "Thompson",
-        )
+        private const val COMPLETE_CHANCE = 0.3
+        private val SURNAME_PREFIX_CHANCE = 0.15
     }
 }
