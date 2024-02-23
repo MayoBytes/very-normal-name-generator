@@ -31,7 +31,7 @@ fun ExpandableCard(text: String, content: @Composable () -> Unit) {
     Card (
         shape = RoundedCornerShape(32.dp),
         elevation = 4.dp,
-        modifier = Modifier.padding(18.dp).fillMaxWidth(),
+        modifier = Modifier.padding(10.dp).fillMaxWidth(),
         backgroundColor = MaterialTheme.colors.primarySurface
     ) {
         Column(

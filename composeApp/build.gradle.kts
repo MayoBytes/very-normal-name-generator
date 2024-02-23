@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -44,8 +45,14 @@ kotlin {
             implementation(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
-            implementation("cafe.adriel.voyager:voyager-screenmodel:1.0.0")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.transitions)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.couchbase.lite)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kermit)
+            implementation(libs.uuid)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

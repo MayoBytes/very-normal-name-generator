@@ -2,6 +2,8 @@ package com.thirdgallon.namegenerator.generator
 
 class NameGenerator {
 
+    private var lastGenerated = ""
+
     fun generate(options: Options): String {
 
         var generated = ""
@@ -18,11 +20,17 @@ class NameGenerator {
             if (generated.isNotEmpty()) generated += " "
             generated += LAST_NAMES.random()
         }
+
+        lastGenerated = generated
         return generated
     }
 
+    fun getLastGenerated(): String {
+        return lastGenerated
+    }
 
     companion object {
+        val shared = NameGenerator()
         private val MASC_FIRST_NAMES = arrayOf(
             "Bill",
             "Tim",
