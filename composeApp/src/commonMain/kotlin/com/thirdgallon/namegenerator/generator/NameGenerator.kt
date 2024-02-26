@@ -7,6 +7,8 @@ class NameGenerator {
 
     private var random = Random(Clock.System.now().epochSeconds)
     private var lastGenerated = ""
+    private val masculineNames = MasculineNames()
+    private val feminineNames = FeminineNames()
 
     fun generate(options: Options): String {
 
@@ -14,40 +16,51 @@ class NameGenerator {
 
         if (options.first) {
             generated += when(options.gender) {
-                Gender.MASC -> generateMasculine()
-                Gender.FEM -> Names.Feminine.COMPLETE.random()
-                Gender.NEUT -> Names.Neutral.COMPLETE.random()
+                Gender.MASC -> generateFirstName(masculineNames)
+                Gender.FEM -> generateFirstName(feminineNames)
+                Gender.NEUT -> NeutralNames.COMPLETE.random()
             }
         }
 
         if (options.last) {
             if (generated.isNotEmpty()) generated += " "
-            generated += generateSurname()
+            generated += generateSurname(options.explicit)
         }
 
         lastGenerated = generated
         return generated
     }
 
-    fun generateMasculine(): String {
-        if (random.nextDouble(0.0, 1.0) <= COMPLETE_CHANCE) {
-            return Names.Masculine.COMPLETE.random()
+    fun generateFirstName(firstNames: FirstNames): String {
+        if (roll(COMPLETE_CHANCE)) {
+            return firstNames.complete().random()
         }
         else {
-            return Names.Masculine.ROOT.random() + Names.Masculine.SUFFIX.random()
+            return firstNames.root().random() + firstNames.suffix().random()
         }
     }
 
-    fun generateSurname():String {
+    fun generateSurname(explicit: Boolean): String {
         if (roll(COMPLETE_CHANCE)) {
-            return Names.Surname.COMPLETE.random()
+            return Surnames.COMPLETE.random()
         }
         else {
-            val base = Names.Surname.ROOT.random() + Names.Surname.SUFFIX.random()
+            val rootList = if (explicit) Surnames.ROOT_EXPLICIT else Surnames.ROOT
+            val suffixList = if (explicit) Surnames.SUFFIX_EXPLICIT else Surnames.SUFFIX
+
+            var base = rootList.random()
+
             if (roll(SURNAME_PREFIX_CHANCE)) {
-                return Names.Surname.PREFIX.random() + base
+                base = Surnames.PREFIX.random() + base
             }
-            else return base
+            if (roll(SURNAME_SUFFIX_CHANCE)) {
+                base += suffixList.random()
+            }
+            if (roll(SURNAME_DOUBLE_SUFFIX_CHANCE)) {
+                base += suffixList.random()
+            }
+
+            return base
         }
     }
 
@@ -61,7 +74,9 @@ class NameGenerator {
 
     companion object {
         val shared = NameGenerator()
-        private const val COMPLETE_CHANCE = 0.3
-        private val SURNAME_PREFIX_CHANCE = 0.15
+        private const val COMPLETE_CHANCE = 0.2
+        private const val SURNAME_PREFIX_CHANCE = 0.15
+        private const val SURNAME_SUFFIX_CHANCE = 0.9
+        private const val SURNAME_DOUBLE_SUFFIX_CHANCE = 0.4
     }
 }

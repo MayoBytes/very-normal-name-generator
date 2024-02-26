@@ -45,34 +45,20 @@ fun BasicOptionsPanel(options: OptionsModel) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("First Name")
-                Spacer(Modifier.padding(horizontal = 6.dp))
-                Switch(
-                    checked = options.first.value,
-                    onCheckedChange = { options.toggleFirst() },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.secondary,
-                        checkedTrackColor = MaterialTheme.colors.secondaryVariant,
-                        uncheckedThumbColor = MaterialTheme.colors.onPrimary,
-                        uncheckedTrackColor = MaterialTheme.colors.onSurface,
-                    )
+                OptionsSwitch(
+                    text = "First Name",
+                    state = options.first,
+                    onToggle = { options.toggleFirst() },
                 )
             }
             Row (
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Last Name")
-                Spacer(Modifier.padding(horizontal = 6.dp))
-                Switch(
-                    checked = options.last.value,
-                    onCheckedChange = { options.toggleLast() },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.secondary,
-                        checkedTrackColor = MaterialTheme.colors.secondaryVariant,
-                        uncheckedThumbColor = MaterialTheme.colors.onPrimary,
-                        uncheckedTrackColor = MaterialTheme.colors.onSurface,
-                    )
+                OptionsSwitch(
+                    text = "Last Name",
+                    state = options.last,
+                    onToggle = { options.toggleLast() },
                 )
             }
         }
@@ -84,28 +70,44 @@ fun BasicOptionsPanel(options: OptionsModel) {
         }
         Row (
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Gender")
-            Spacer(Modifier.padding(10.dp))
-            OutlinedButton(
-                shape = RoundedCornerShape(32.dp),
-                onClick = { showGenderPicker = !showGenderPicker }
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(stringForGender(options.gender.value))
-                DropdownMenu(
-                    expanded = showGenderPicker,
-                    onDismissRequest = { showGenderPicker = false },
+                Text("Gender")
+                Spacer(Modifier.padding(10.dp))
+                OutlinedButton(
+                    shape = RoundedCornerShape(32.dp),
+                    onClick = { showGenderPicker = !showGenderPicker }
                 ) {
-                    Gender.entries.forEach { gender ->
-                        DropdownMenuItem(onClick = {
-                            options.setGender(gender)
-                            showGenderPicker = false
-                        }) {
-                            Text(stringForGender(gender))
+                    Text(stringForGender(options.gender.value))
+                    DropdownMenu(
+                        expanded = showGenderPicker,
+                        onDismissRequest = { showGenderPicker = false },
+                    ) {
+                        Gender.entries.forEach { gender ->
+                            DropdownMenuItem(onClick = {
+                                options.setGender(gender)
+                                showGenderPicker = false
+                            }) {
+                                Text(stringForGender(gender))
+                            }
                         }
                     }
                 }
+            }
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                OptionsSwitch(
+                    text = "Explicit",
+                    state = options.explicit,
+                    onToggle = { options.toggleExplicit() },
+                )
             }
         }
     }

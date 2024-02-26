@@ -14,6 +14,7 @@ val settings: Settings = Settings()
 
 const val OPTIONS_GEN_FIRST_NAME = "options_gen_first_name"
 const val OPTIONS_GEN_LAST_NAME = "options_gen_last_name"
+const val OPTIONS_GEN_EXPLICIT = "options_gen_explicit"
 const val OPTIONS_GENDER = "options_gender"
 class OptionsModel: ScreenModel {
 
@@ -23,6 +24,9 @@ class OptionsModel: ScreenModel {
 
     private val _last = mutableStateOf(settings[OPTIONS_GEN_LAST_NAME, true])
     val last: State<Boolean> = _last
+
+    private val _explicit = mutableStateOf(settings[OPTIONS_GEN_EXPLICIT, true])
+    val explicit: State<Boolean> = _explicit
 
     private val _gender = mutableStateOf(Gender.entries.first { it.gender == settings[OPTIONS_GENDER, Gender.MASC.gender]})
     val gender: State<Gender> = _gender
@@ -35,6 +39,10 @@ class OptionsModel: ScreenModel {
         settings[OPTIONS_GEN_LAST_NAME] = toggle(_last)
     }
 
+    fun toggleExplicit() {
+        settings[OPTIONS_GEN_EXPLICIT] = toggle(_explicit)
+    }
+
     fun setGender(gender: Gender) {
         _gender.value = gender
         settings[OPTIONS_GENDER] = gender.gender
@@ -44,6 +52,7 @@ class OptionsModel: ScreenModel {
         return Options(
             first = first.value,
             last = last.value,
+            explicit = explicit.value,
             gender = gender.value,
         )
     }

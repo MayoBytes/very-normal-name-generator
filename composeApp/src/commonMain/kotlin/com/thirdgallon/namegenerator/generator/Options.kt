@@ -3,7 +3,8 @@ package com.thirdgallon.namegenerator.generator
 data class Options(
     var first: Boolean = true,
     var last: Boolean = true,
-    var gender: Gender = Gender.MASC
+    var explicit: Boolean = true,
+    var gender: Gender = Gender.MASC,
 )
 
 enum class Gender(val gender: Int) {
