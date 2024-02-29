@@ -18,6 +18,7 @@ class MasculineNames: FirstNames {
             "Dean",
             "Don",
             "Emmett",
+            "Fish",
             "Frank",
             "Fred",
             "George",
