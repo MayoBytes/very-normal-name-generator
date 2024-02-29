@@ -36,47 +36,44 @@ fun BasicOptionsPanel(options: OptionsModel) {
         horizontalAlignment = Alignment.Start,
     ) {
 
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+        OptionsRow {
+            OptionsItem {
                 OptionsSwitch(
                     text = "First Name",
                     state = options.first,
                     onToggle = { options.toggleFirst() },
+                    enabled = !options.lockFirst.value,
                 )
             }
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+            OptionsItem {
                 OptionsSwitch(
                     text = "Last Name",
                     state = options.last,
                     onToggle = { options.toggleLast() },
+                    enabled = !options.lockLast.value,
                 )
             }
         }
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-        ) {
-
+        OptionsRow {
+            OptionsItem {
+                OptionsSwitch(
+                    text = "Lock First Name",
+                    state = options.lockFirst,
+                    onToggle = { options.toggleLockFirst() },
+                    enabled = options.first.value,
+                )
+            }
+            OptionsItem {
+                OptionsSwitch(
+                    text = "Lock Last Name",
+                    state = options.lockLast,
+                    onToggle = { options.toggleLockLast() },
+                    enabled = options.last.value,
+                )
+            }
         }
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+        OptionsRow {
+            OptionsItem {
                 Text("Gender")
                 Spacer(Modifier.padding(10.dp))
                 OutlinedButton(
@@ -99,17 +96,35 @@ fun BasicOptionsPanel(options: OptionsModel) {
                     }
                 }
             }
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+            OptionsItem {
                 OptionsSwitch(
-                    text = "Explicit",
+                    text = "NSFW",
                     state = options.explicit,
                     onToggle = { options.toggleExplicit() },
                 )
             }
         }
+    }
+}
+
+@Composable
+fun OptionsItem(content: @Composable () -> Unit) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun OptionsRow(content: @Composable () -> Unit) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        content()
     }
 }
 

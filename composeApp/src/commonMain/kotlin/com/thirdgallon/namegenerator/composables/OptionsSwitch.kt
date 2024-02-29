@@ -12,10 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OptionsSwitch(text: String, state: State<Boolean>, onToggle: (Boolean) -> Unit) {
+fun OptionsSwitch(
+    text: String, state: State<Boolean>,
+    onToggle: (Boolean) -> Unit,
+    enabled: Boolean = true,
+) {
     Text(text)
     Spacer(Modifier.padding(horizontal = 6.dp))
     Switch(
+        enabled = enabled,
         checked = state.value,
         onCheckedChange = onToggle,
         colors = SwitchDefaults.colors(

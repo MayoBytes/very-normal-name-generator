@@ -13,7 +13,9 @@ import com.russhwolf.settings.set
 val settings: Settings = Settings()
 
 const val OPTIONS_GEN_FIRST_NAME = "options_gen_first_name"
+const val OPTIONS_LOCK_FIRST_NAME = "options_gen_first_name"
 const val OPTIONS_GEN_LAST_NAME = "options_gen_last_name"
+const val OPTIONS_LOCK_LAST_NAME = "options_gen_last_name"
 const val OPTIONS_GEN_EXPLICIT = "options_gen_explicit"
 const val OPTIONS_GENDER = "options_gender"
 class OptionsModel: ScreenModel {
@@ -22,8 +24,14 @@ class OptionsModel: ScreenModel {
     private val _first = mutableStateOf(settings[OPTIONS_GEN_FIRST_NAME, true])
     val first: State<Boolean> = _first
 
+    private val _lockFirst = mutableStateOf(settings[OPTIONS_LOCK_FIRST_NAME, false])
+    val lockFirst: State<Boolean> = _lockFirst
+
     private val _last = mutableStateOf(settings[OPTIONS_GEN_LAST_NAME, true])
     val last: State<Boolean> = _last
+
+    private val _lockLast = mutableStateOf(settings[OPTIONS_LOCK_LAST_NAME, false])
+    val lockLast: State<Boolean> = _lockLast
 
     private val _explicit = mutableStateOf(settings[OPTIONS_GEN_EXPLICIT, true])
     val explicit: State<Boolean> = _explicit
@@ -35,8 +43,16 @@ class OptionsModel: ScreenModel {
         settings[OPTIONS_GEN_FIRST_NAME] = toggle(_first)
     }
 
+    fun toggleLockFirst() {
+        settings[OPTIONS_LOCK_FIRST_NAME] = toggle(_lockFirst)
+    }
+
     fun toggleLast() {
         settings[OPTIONS_GEN_LAST_NAME] = toggle(_last)
+    }
+
+    fun toggleLockLast() {
+        settings[OPTIONS_LOCK_LAST_NAME] = toggle(_lockLast)
     }
 
     fun toggleExplicit() {
@@ -51,7 +67,9 @@ class OptionsModel: ScreenModel {
     fun getOptions(): Options {
         return Options(
             first = first.value,
+            lockFirst = lockFirst.value,
             last = last.value,
+            lockLast = lockLast.value,
             explicit = explicit.value,
             gender = gender.value,
         )

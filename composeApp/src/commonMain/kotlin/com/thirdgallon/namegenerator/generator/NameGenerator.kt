@@ -7,25 +7,35 @@ class NameGenerator {
 
     private var random = Random(Clock.System.now().epochSeconds)
     private var lastGenerated = ""
+    private var lastFirstName = ""
+    private var lastSurname = ""
     private val masculineNames = MasculineNames()
     private val feminineNames = FeminineNames()
 
     fun generate(options: Options): String {
 
-        var generated = ""
-
-        if (options.first) {
-            generated += when(options.gender) {
+        val first = if (options.lockFirst)
+            lastFirstName
+        else if (options.first)
+            when(options.gender) {
                 Gender.MASC -> generateFirstName(masculineNames)
                 Gender.FEM -> generateFirstName(feminineNames)
                 Gender.NEUT -> NeutralNames.COMPLETE.random()
             }
-        }
+        else ""
 
-        if (options.last) {
-            if (generated.isNotEmpty()) generated += " "
-            generated += generateSurname(options.explicit)
-        }
+        val last = if (options.lockLast)
+            lastSurname
+        else if (options.last)
+            generateSurname(options.explicit)
+        else ""
+
+        lastFirstName = first
+        lastSurname = last
+
+        val generated = if (first.isEmpty())
+            last
+        else "$first $last"
 
         lastGenerated = generated
         return generated
