@@ -348,7 +348,12 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
-
+iosApp/Podfile.lock
+iosApp/Pods/*
+iosApp/iosApp.xcworkspace/*
+iosApp/iosApp.xcodeproj/*
+!iosApp/iosApp.xcodeproj/project.pbxproj
 
 # End of https://www.gitignore.io/api/xcode,macos,kotlin,android,windows,intellij,androidstudio
 
+composeApp/composeApp.podspec
