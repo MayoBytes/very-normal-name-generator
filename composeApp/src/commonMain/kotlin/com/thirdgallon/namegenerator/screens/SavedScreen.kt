@@ -1,9 +1,9 @@
 package com.thirdgallon.namegenerator.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -43,14 +43,14 @@ object SavedScreen : Screen {
                 )
             }
         ) {
-            Column(
+            LazyColumn (
                 modifier = Modifier.padding(18.dp).fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                model.saved.value.forEach { savedName ->
+                items(count = model.saved.value.size, key = { model.saved.value[it].id }) {
                     SavedNameListItem(
-                        savedName = savedName,
+                        savedName = model.saved.value[it],
                         onClick = { tapped -> Logger.i("${tapped.name} tapped") },
                         onDelete = { toDelete -> model.delete(toDelete.id) }
                     )
