@@ -15,12 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import com.thirdgallon.namegenerator.composables.BasicOptionsPanel
+import com.thirdgallon.namegenerator.composables.BasicOptions
 import com.thirdgallon.namegenerator.composables.ExpandableCard
 import com.thirdgallon.namegenerator.composables.RoundedTextButton
 import com.thirdgallon.namegenerator.database.SavedName
@@ -47,13 +48,15 @@ object MainScreen : Screen {
                 text = generated,
                 fontWeight = FontWeight.Bold,
                 fontSize = 40.sp,
+                textAlign = TextAlign.Center,
             )
             RoundedTextButton(
                 text = "Generate Name",
+                enabled = !(model.lockFirst.value && model.lockLast.value),
                 onClick = {generated = NameGenerator.shared.generate(model.getOptions()) }
             )
             ExpandableCard(text = "Generator Options") {
-                BasicOptionsPanel(model)
+                BasicOptions(model)
             }
 
             RoundedTextButton(

@@ -41,6 +41,9 @@ class OptionsModel: ScreenModel {
 
     fun toggleFirst() {
         settings[OPTIONS_GEN_FIRST_NAME] = toggle(_first)
+        if (!_first.value && _lockFirst.value) {
+            toggleLockFirst()
+        }
     }
 
     fun toggleLockFirst() {
@@ -49,6 +52,9 @@ class OptionsModel: ScreenModel {
 
     fun toggleLast() {
         settings[OPTIONS_GEN_LAST_NAME] = toggle(_last)
+        if (!_last.value && _lockLast.value) {
+            toggleLockLast()
+        }
     }
 
     fun toggleLockLast() {

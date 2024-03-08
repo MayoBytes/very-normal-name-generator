@@ -13,7 +13,7 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "19"
             }
         }
     }
@@ -35,28 +35,30 @@ kotlin {
         val desktopMain by getting
         
         androidMain.dependencies {
-            implementation(libs.compose.ui.tooling)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
+            api(libs.androidx.core.ktx)
+            api(libs.compose.ui.tooling)
+            api(libs.compose.ui.tooling.preview)
+            api(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
+            api(compose.runtime)
+            api(compose.foundation)
+            api(compose.material)
+            api(compose.materialIconsExtended)
+            api(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.components.resources)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenmodel)
-            implementation(libs.voyager.transitions)
-            implementation(libs.multiplatform.settings.no.arg)
-            implementation(libs.couchbase.lite)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kermit)
-            implementation(libs.uuid)
+            api(compose.components.resources)
+            api(libs.voyager.navigator)
+            api(libs.voyager.screenmodel)
+            api(libs.voyager.transitions)
+            api(libs.multiplatform.settings.no.arg)
+            api(libs.couchbase.lite)
+            api(libs.kotlinx.serialization.json)
+            api(libs.kermit)
+            api(libs.uuid)
         }
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            api(compose.desktop.currentOs)
         }
     }
 
@@ -97,11 +99,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
-    dependencies {
-        debugImplementation(libs.compose.ui.tooling)
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
 }
 

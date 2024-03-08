@@ -1,6 +1,5 @@
 package com.thirdgallon.namegenerator.composables
 
-import com.thirdgallon.namegenerator.models.OptionsModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,10 +21,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.thirdgallon.namegenerator.generator.Gender
+import com.thirdgallon.namegenerator.models.OptionsModel
 
 
 @Composable
-fun BasicOptionsPanel(options: OptionsModel) {
+fun BasicOptions(options: OptionsModel) {
+    WrappedBasicOptionsPanel(
+        first = options.first,
+        toggleFirst = { options.toggleFirst() },
+        lockFirst = options.lockFirst,
+        toggleLockFirst = { options.toggleLockFirst() },
+        last = options.last,
+        toggleLast = { options.toggleLast() },
+        lockLast = options.lockLast,
+        toggleLockLast = { options.toggleLockLast() },
+        gender = options.gender,
+        setGender = { options.setGender(it) },
+        explicit = options.explicit,
+        toggleExplicit = { options.toggleExplicit() }
+    )
+}
+
+@Composable
+fun WrappedBasicOptionsPanel(
+    first: State<Boolean>,
+    toggleFirst: (Boolean) -> Unit,
+    lockFirst: State<Boolean>,
+    toggleLockFirst: (Boolean) -> Unit,
+    last: State<Boolean>,
+    toggleLast: (Boolean) -> Unit,
+    lockLast: State<Boolean>,
+    toggleLockLast: (Boolean) -> Unit,
+    gender: State<Gender>,
+    setGender: (Gender) -> Unit,
+    explicit: State<Boolean>,
+    toggleExplicit: (Boolean) -> Unit,
+) {
 
     var showGenderPicker by remember { mutableStateOf(false) }
 
@@ -38,37 +67,21 @@ fun BasicOptionsPanel(options: OptionsModel) {
 
         OptionsRow {
             OptionsItem {
-                OptionsSwitch(
+                PinnableToggle(
                     text = "First Name",
-                    state = options.first,
-                    onToggle = { options.toggleFirst() },
-                    enabled = !options.lockFirst.value,
+                    enabled = first,
+                    onToggle = { toggleFirst(!first.value) },
+                    pinned = lockFirst,
+                    onPinToggle = { toggleLockFirst(!lockFirst.value) },
                 )
             }
             OptionsItem {
-                OptionsSwitch(
+                PinnableToggle(
                     text = "Last Name",
-                    state = options.last,
-                    onToggle = { options.toggleLast() },
-                    enabled = !options.lockLast.value,
-                )
-            }
-        }
-        OptionsRow {
-            OptionsItem {
-                OptionsSwitch(
-                    text = "Lock First Name",
-                    state = options.lockFirst,
-                    onToggle = { options.toggleLockFirst() },
-                    enabled = options.first.value,
-                )
-            }
-            OptionsItem {
-                OptionsSwitch(
-                    text = "Lock Last Name",
-                    state = options.lockLast,
-                    onToggle = { options.toggleLockLast() },
-                    enabled = options.last.value,
+                    enabled = last,
+                    onToggle = { toggleLast(!last.value) },
+                    pinned = lockLast,
+                    onPinToggle = { toggleLockLast(!lockLast.value) },
                 )
             }
         }
@@ -80,14 +93,14 @@ fun BasicOptionsPanel(options: OptionsModel) {
                     shape = RoundedCornerShape(32.dp),
                     onClick = { showGenderPicker = !showGenderPicker }
                 ) {
-                    Text(stringForGender(options.gender.value))
+                    Text(stringForGender(gender.value))
                     DropdownMenu(
                         expanded = showGenderPicker,
                         onDismissRequest = { showGenderPicker = false },
                     ) {
                         Gender.entries.forEach { gender ->
                             DropdownMenuItem(onClick = {
-                                options.setGender(gender)
+                                setGender(gender)
                                 showGenderPicker = false
                             }) {
                                 Text(stringForGender(gender))
@@ -99,8 +112,8 @@ fun BasicOptionsPanel(options: OptionsModel) {
             OptionsItem {
                 OptionsSwitch(
                     text = "NSFW",
-                    state = options.explicit,
-                    onToggle = { options.toggleExplicit() },
+                    state = explicit,
+                    onToggle = toggleExplicit,
                 )
             }
         }
