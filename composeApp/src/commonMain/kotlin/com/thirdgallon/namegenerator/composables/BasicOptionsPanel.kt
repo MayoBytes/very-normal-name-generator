@@ -82,6 +82,7 @@ fun WrappedBasicOptionsPanel(
                     onToggle = { toggleLast(!last.value) },
                     pinned = lockLast,
                     onPinToggle = { toggleLockLast(!lockLast.value) },
+                    lockSide = LockSide.LEFT,
                 )
             }
         }

@@ -21,6 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+enum class LockSide {
+    LEFT,
+    RIGHT
+}
+
 @Composable
 fun PinnableToggle(
     text: String,
@@ -28,11 +33,15 @@ fun PinnableToggle(
     onToggle: () -> Unit,
     pinned: State<Boolean>,
     onPinToggle: () -> Unit,
+    lockSide: LockSide = LockSide.RIGHT,
 ) {
 
     Row (
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        if (lockSide == LockSide.LEFT) {
+            Lock(enabled, pinned, onPinToggle)
+        }
         Button(
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier.padding(0.dp, 0.dp, 1.dp, 0.dp),
@@ -46,20 +55,31 @@ fun PinnableToggle(
         ) {
             Text(text)
         }
-        AnimatedVisibility(enabled.value) {
-            IconButton(
-                modifier = Modifier.padding(1.dp, 0.dp, 0.dp, 0.dp),
-                onClick = onPinToggle,
-            ) {
-                Icon(
-                    if (pinned.value)
-                        Icons.Filled.Lock
-                    else
-                        Icons.Filled.LockOpen,
-                    modifier = Modifier.size(20.dp).padding(0.dp),
-                    contentDescription = null,
-                )
-            }
+        if (lockSide == LockSide.RIGHT) {
+            Lock(enabled, pinned, onPinToggle)
+        }
+    }
+}
+
+@Composable
+private fun Lock(
+    enabled: State<Boolean>,
+    pinned: State<Boolean>,
+    onPinToggle: () -> Unit,
+) {
+    AnimatedVisibility(enabled.value) {
+        IconButton(
+            modifier = Modifier.padding(1.dp, 0.dp, 0.dp, 0.dp),
+            onClick = onPinToggle,
+        ) {
+            Icon(
+                if (pinned.value)
+                    Icons.Filled.Lock
+                else
+                    Icons.Filled.LockOpen,
+                modifier = Modifier.size(20.dp).padding(0.dp),
+                contentDescription = null,
+            )
         }
     }
 }
