@@ -16,6 +16,16 @@ data class SavedName(
     override fun toString(): String {
         return "id: $id, name: $name, description:\n$description"
     }
+
+    override fun equals(other: Any?): Boolean {
+        other?.let {
+            if (it is SavedName) {
+                return it.name.lowercase() == name.lowercase()
+            }
+        }
+        return false
+    }
+
     companion object {
         const val ID = "id"
         const val NAME = "name"
