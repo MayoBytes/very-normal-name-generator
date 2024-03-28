@@ -26,6 +26,10 @@ data class SavedName(
         return false
     }
 
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
+
     companion object {
         const val ID = "id"
         const val NAME = "name"

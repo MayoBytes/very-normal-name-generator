@@ -1,6 +1,7 @@
 package com.thirdgallon.namegenerator.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,22 +33,21 @@ fun SavedNameListItem(
         modifier = Modifier.padding(0.dp, 1.dp)
     ) {
         Row(
-            //modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TextButton(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = { onClick(savedName) },
-
-            ) {
-                Text(
-                    textAlign = TextAlign.Start,
-                    text = savedName.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(8.dp)
-                )
+            Box(modifier = Modifier.fillMaxWidth(0.8f)) {
+                TextButton(
+                    onClick = { onClick(savedName) },
+                ) {
+                    Text(
+                        textAlign = TextAlign.Start,
+                        text = savedName.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
             IconButton(
                 onClick = { onDelete(savedName) },

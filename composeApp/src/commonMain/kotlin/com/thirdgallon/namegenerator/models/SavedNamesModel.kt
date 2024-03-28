@@ -1,5 +1,7 @@
 package com.thirdgallon.namegenerator.models
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import com.thirdgallon.namegenerator.database.SavedName
@@ -8,24 +10,22 @@ import com.thirdgallon.namegenerator.database.UUID
 
 class SavedNamesModel : ScreenModel {
 
-    private var _saved = mutableStateOf(mutableListOf(SavedName("", "", "")))
-    val saved = _saved
+    private var savedMap: MutableMap<String, SavedName> = mutableMapOf()
+    private var _saved: MutableState<List<SavedName>> = mutableStateOf(listOf())
+    val saved: State<List<SavedName>> = _saved
 
     init {
         refresh()
     }
 
     fun delete(id: String) {
+        savedMap.remove(id)
         SavedNameDatabase.shared.deleteName(id)
-        refresh()
-    }
-
-    fun refresh() {
-        _saved.value = SavedNameDatabase.shared.selectAll().toMutableList()
+        updateState()
     }
 
     fun contains(name: String): Boolean {
-        return _saved.value.contains(SavedName("", name, ""))
+        return savedMap.containsValue(SavedName("", name, ""))
     }
 
     fun saveName(name: String, description: String?) {
@@ -33,13 +33,25 @@ class SavedNamesModel : ScreenModel {
             return
         }
 
-        SavedNameDatabase.shared.writeName(
-            SavedName(
-                id = UUID().toString(),
-                name,
-                description = description ?: "",
-            )
+        val saved = SavedName(
+            id = UUID().toString(),
+            name,
+            description = description ?: "",
         )
-        refresh()
+
+        savedMap[saved.id] = saved
+        SavedNameDatabase.shared.writeName(saved)
+        updateState()
+    }
+
+    fun refresh() {
+        savedMap.clear()
+        val names = SavedNameDatabase.shared.selectAll().toMutableList()
+        names.forEach { savedMap[it.id] = it }
+        updateState()
+    }
+
+    private fun updateState() {
+        _saved.value = savedMap.values.toList()
     }
 }
